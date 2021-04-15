@@ -4,15 +4,25 @@ interface IAnimation {
     draw(): void
 }
 
+interface ITrack {
+    calculation(position: ElementPosition): ElementPosition
+}
+
+interface IMoving {
+    track: ITrack
+    setTrack(track: ITrack)
+}
+
 interface ElementPosition {
     x: number
-    y: number 
+    y: number
 }
 
 interface PositionSpeed {
-    x:number
-    y:number
+    x: number
+    y: number
 }
+
 
 
 const lightMax = 200
@@ -23,11 +33,15 @@ const RandomNum = (num1: number, num2: number): number => {
 export class Transformation {
     animations: IAnimation[] = []
     element: HTMLElement
+    cssText: string
     constructor(container?: HTMLElement) {
         this.element = document.createElement("div");
         (container || document.body).appendChild(this.element);
     }
-    setIAnimation(animation: IAnimation) {
+    initCssText(cssText) {
+        this.cssText = cssText
+    }
+    setAnimation(animation: IAnimation) {
         this.animations.push(animation.setElement(this.element))
         return this
     }
@@ -36,31 +50,95 @@ export class Transformation {
         return this
     }
     draw() {
-        this.element.style.cssText = ''
+        this.element.style.cssText = this.cssText
         this.animations.forEach(animation => {
             animation.draw()
         })
     }
 }
-export class Moving implements IAnimation {
-    element: HTMLElement;
-    constructor(private position?: ElementPosition, private speed?: PositionSpeed) {
-        if (!position) this.position = { x: RandomNum(100, (window.screen.availWidth - 100)), y: RandomNum(100, (window.screen.availHeight - 100)) }
+
+export class RandomTrack implements ITrack {
+    constructor(private speed?: PositionSpeed) {
         if (!speed) this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
     }
+    calculation(position: ElementPosition): ElementPosition {
+        position.x += this.speed.x
+        position.y += this.speed.y
+        if (position.x >= window.screen.availWidth || position.x <= 0) {
+            this.speed.x = -this.speed.x;//改变方向
+        }
+        if (position.y >= window.screen.availHeight || position.y <= 0) {
+            this.speed.y = - this.speed.y;//改变方向
+        }
+        return position
+    }
+}
+export class UpTrack implements ITrack {
+    constructor(private speed?: PositionSpeed) {
+        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) - 3 }
+    }
+    calculation(position: ElementPosition): ElementPosition {
+        position.x += this.speed.x
+        position.y += this.speed.y
+        if (position.x >= window.screen.availWidth || position.x <= 0) {
+            this.speed.x = -this.speed.x;// 
+        }
+        if (position.y <= 0) {
+            position.y += window.screen.availHeight
+        }
+        return position
+    }
+}
+
+export class DownTrack implements ITrack {
+    constructor(private speed?: PositionSpeed) {
+        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) }
+    }
+    calculation(position: ElementPosition): ElementPosition {
+        position.x += this.speed.x
+        position.y += this.speed.y
+        if (position.x >= window.screen.availWidth || position.x <= 0) {
+            this.speed.x = -this.speed.x;// 
+        }
+        if (position.y >= window.screen.availHeight) {
+            position.y -= window.screen.availHeight
+        }
+        return position
+    }
+}
+
+export class SpreadTrack implements ITrack {
+    constructor(private speed?: PositionSpeed) {
+        if (!speed) this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
+    }
+    calculation(position: ElementPosition): ElementPosition {
+        position.x += this.speed.x
+        position.y += this.speed.y
+        if (position.x >= window.screen.availWidth || position.x <= 0 || position.y >= window.screen.availHeight || position.y <= 0) {
+            position.x = window.screen.availWidth / 2
+            position.y = window.screen.availHeight / 2
+        }
+
+        return position
+    }
+}
+
+export class Moving implements IAnimation, IMoving {
+    track: ITrack;
+    element: HTMLElement;
+    constructor(private position?: ElementPosition) { 
+        if (!position) this.position = { x: RandomNum(100, (window.screen.availWidth - 100)), y: RandomNum(100, (window.screen.availHeight - 100)) } 
+        this.track = new RandomTrack()
+    }
+    setTrack(track: ITrack) {
+        this.track = track
+    } 
     setElement(element: HTMLElement) {
         this.element = element
         return this
     }
     draw() {
-        this.position.x += this.speed.x
-        this.position.y += this.speed.y
-        if (this.position.x >= window.screen.availWidth || this.position.x <= 0) {
-            this.speed.x = -this.speed.x;//改变方向
-        }
-        if (this.position.y >= window.screen.availHeight || this.position.y <= 0) {
-            this.speed.y = -this.speed.y;//改变方向
-        }
+        this.position = this.track.calculation(this.position)
         let cssText = ` 
         		left:${this.position.x}px;
         		top:${this.position.y}px;

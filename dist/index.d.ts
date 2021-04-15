@@ -3,6 +3,13 @@ interface IAnimation {
     setElement(element: HTMLElement): IAnimation;
     draw(): void;
 }
+interface ITrack {
+    calculation(position: ElementPosition): ElementPosition;
+}
+interface IMoving {
+    track: ITrack;
+    setTrack(track: ITrack): any;
+}
 interface ElementPosition {
     x: number;
     y: number;
@@ -14,16 +21,39 @@ interface PositionSpeed {
 export declare class Transformation {
     animations: IAnimation[];
     element: HTMLElement;
+    cssText: string;
     constructor(container?: HTMLElement);
-    setIAnimation(animation: IAnimation): this;
+    initCssText(cssText: any): void;
+    setAnimation(animation: IAnimation): this;
     appendChild(child: HTMLElement | string): this;
     draw(): void;
 }
-export declare class Moving implements IAnimation {
-    private position?;
+export declare class RandomTrack implements ITrack {
     private speed?;
+    constructor(speed?: PositionSpeed);
+    calculation(position: ElementPosition): ElementPosition;
+}
+export declare class UpTrack implements ITrack {
+    private speed?;
+    constructor(speed?: PositionSpeed);
+    calculation(position: ElementPosition): ElementPosition;
+}
+export declare class DownTrack implements ITrack {
+    private speed?;
+    constructor(speed?: PositionSpeed);
+    calculation(position: ElementPosition): ElementPosition;
+}
+export declare class SpreadTrack implements ITrack {
+    private speed?;
+    constructor(speed?: PositionSpeed);
+    calculation(position: ElementPosition): ElementPosition;
+}
+export declare class Moving implements IAnimation, IMoving {
+    private position?;
+    track: ITrack;
     element: HTMLElement;
-    constructor(position?: ElementPosition, speed?: PositionSpeed);
+    constructor(position?: ElementPosition);
+    setTrack(track: ITrack): void;
     setElement(element: HTMLElement): this;
     draw(): void;
 }

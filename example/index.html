@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="../dist/index.js"></script>
+    <script> 
+        var lights = [];
+        var texts = []
+        var rectangles = []
+
+        for (var i = 0; i < 20; i++) {
+            var light = new Transformation()
+                .setAnimation(new Moving())
+                .setAnimation(new Lighting())
+            lights.push(light);//生成的小球对象放进数组
+
+        }
+
+        for (var i = 0; i < 10; i++) {
+            var text = new Transformation()
+                .setAnimation(new Moving())
+                .setAnimation(new TextShining())
+                .appendChild((1 << (i + 20)).toString())
+            texts.push(text);//生成的小球对象放进数组
+
+        }
+
+
+        for (var i = 0; i < 6; i++) {
+            var rectangle = new Transformation()
+                .setAnimation(new Moving())
+            rectangles.push(rectangle);//生成的小球对象放进数组
+
+        }
+
+
+
+        function start() {
+            for (var i = 0; i < lights.length; i++) {
+                lights[i].draw();
+            }
+
+            for (var i = 0; i < texts.length; i++) {
+                texts[i].draw();
+            }
+
+            for (var i = 0; i < rectangles.length; i++) {
+                rectangles[i].draw();
+            }
+            window.requestAnimationFrame(start)
+        }
+
+
+        start()
+    </script>
+</body>
+
+</html>
