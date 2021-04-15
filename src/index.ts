@@ -27,8 +27,12 @@ interface PositionSpeed {
 
 const lightMax = 200
 const lightMin = 100
-const RandomNum = (num1: number, num2: number): number => {
+export const RandomNum = (num1: number, num2: number): number => {
     return Math.floor(Math.random() * (num2 - num1 + 1) + num1);
+}
+
+export const RandomColor= (  )  => {
+    return "rgba("+RandomNum(0,255)+","+RandomNum(0,255)+","+RandomNum(0,255)+","+Math.random()+")";//随机颜色
 }
 export class Transformation {
     animations: IAnimation[] = []
@@ -40,6 +44,7 @@ export class Transformation {
     }
     initCssText(cssText) {
         this.cssText = cssText
+        return this
     }
     setAnimation(animation: IAnimation) {
         this.animations.push(animation.setElement(this.element))
@@ -85,6 +90,7 @@ export class UpTrack implements ITrack {
         }
         if (position.y <= 0) {
             position.y += window.screen.availHeight
+            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
         }
         return position
     }
@@ -102,6 +108,7 @@ export class DownTrack implements ITrack {
         }
         if (position.y >= window.screen.availHeight) {
             position.y -= window.screen.availHeight
+            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
         }
         return position
     }
@@ -115,8 +122,11 @@ export class SpreadTrack implements ITrack {
         position.x += this.speed.x
         position.y += this.speed.y
         if (position.x >= window.screen.availWidth || position.x <= 0 || position.y >= window.screen.availHeight || position.y <= 0) {
+            
             position.x = window.screen.availWidth / 2
             position.y = window.screen.availHeight / 2
+
+            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
         }
 
         return position
@@ -126,13 +136,14 @@ export class SpreadTrack implements ITrack {
 export class Moving implements IAnimation, IMoving {
     track: ITrack;
     element: HTMLElement;
-    constructor(private position?: ElementPosition) { 
-        if (!position) this.position = { x: RandomNum(100, (window.screen.availWidth - 100)), y: RandomNum(100, (window.screen.availHeight - 100)) } 
+    constructor(private position?: ElementPosition) {
+        if (!position) this.position = { x: RandomNum(100, (window.screen.availWidth - 100)), y: RandomNum(100, (window.screen.availHeight - 100)) }
         this.track = new RandomTrack()
     }
     setTrack(track: ITrack) {
         this.track = track
-    } 
+        return this
+    }
     setElement(element: HTMLElement) {
         this.element = element
         return this

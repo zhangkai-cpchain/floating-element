@@ -24,6 +24,7 @@ for (var i = 0; i < 10; i++) {
 
 for (var i = 0; i < 6; i++) {
     var rectangle = new Transformation( )
+        .initCssText('background:"#f00"')
         .setAnimation(new Moving()) 
     rectangles.push(rectangle);//生成的小球对象放进数组
 
