@@ -46,6 +46,9 @@ export class Transformation {
         this.cssText = cssText
         return this
     }
+    setClass(c:string){
+        this.element.className = c;
+    }
     setAnimation(animation: IAnimation) {
         this.animations.push(animation.setElement(this.element))
         return this
