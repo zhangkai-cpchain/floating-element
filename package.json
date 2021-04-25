@@ -5,6 +5,11 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
+    "tsc": "tsc",
+    "tscw": "tsc --watch",
+    "wp": "webpack",
+    "wpw": "webpack --watch",
+    "serve": "http-server build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/zhangkai-cpchain/floating-element/issues"
   },
-  "homepage": "https://github.com/zhangkai-cpchain/floating-element#readme"
+  "homepage": "https://github.com/zhangkai-cpchain/floating-element#readme",
+  "dependencies": {
+    "webpack": "^5.35.1"
+  }
 }

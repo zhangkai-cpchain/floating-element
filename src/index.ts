@@ -31,8 +31,8 @@ export const RandomNum = (num1: number, num2: number): number => {
     return Math.floor(Math.random() * (num2 - num1 + 1) + num1);
 }
 
-export const RandomColor= (  )  => {
-    return "rgba("+RandomNum(0,255)+","+RandomNum(0,255)+","+RandomNum(0,255)+","+Math.random()+")";//随机颜色
+export const RandomColor = () => {
+    return "rgba(" + RandomNum(0, 255) + "," + RandomNum(0, 255) + "," + RandomNum(0, 255) + "," + Math.random() + ")";//随机颜色
 }
 export class Transformation {
     animations: IAnimation[] = []
@@ -46,8 +46,9 @@ export class Transformation {
         this.cssText = cssText
         return this
     }
-    setClass(c:string){
+    setClass(c: string) {
         this.element.className = c;
+        return this
     }
     setAnimation(animation: IAnimation) {
         this.animations.push(animation.setElement(this.element))
@@ -67,7 +68,7 @@ export class Transformation {
 
 export class RandomTrack implements ITrack {
     constructor(private speed?: PositionSpeed) {
-        if (!speed) this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
+        if (!speed) this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) }
     }
     calculation(position: ElementPosition): ElementPosition {
         position.x += this.speed.x
@@ -83,7 +84,7 @@ export class RandomTrack implements ITrack {
 }
 export class UpTrack implements ITrack {
     constructor(private speed?: PositionSpeed) {
-        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) - 3 }
+        if (!speed) this.speed = { x: RandomNum(-0.1, 0.1), y: RandomNum(-3, 0) }
     }
     calculation(position: ElementPosition): ElementPosition {
         position.x += this.speed.x
@@ -93,7 +94,7 @@ export class UpTrack implements ITrack {
         }
         if (position.y <= 0) {
             position.y += window.screen.availHeight
-            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) }
         }
         return position
     }
@@ -101,17 +102,22 @@ export class UpTrack implements ITrack {
 
 export class DownTrack implements ITrack {
     constructor(private speed?: PositionSpeed) {
-        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) }
+        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(2, 3) }
     }
+
+    // 下降加速
+    gravity(x: number) {
+        return 1 + 0.5 * x / window.screen.availHeight
+    }
+
     calculation(position: ElementPosition): ElementPosition {
         position.x += this.speed.x
-        position.y += this.speed.y
+        position.y += this.speed.y * this.gravity(position.y)
         if (position.x >= window.screen.availWidth || position.x <= 0) {
             this.speed.x = -this.speed.x;// 
         }
         if (position.y >= window.screen.availHeight) {
             position.y -= window.screen.availHeight
-            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
         }
         return position
     }
@@ -119,17 +125,17 @@ export class DownTrack implements ITrack {
 
 export class SpreadTrack implements ITrack {
     constructor(private speed?: PositionSpeed) {
-        if (!speed) this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
+        if (!speed) this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) }
     }
     calculation(position: ElementPosition): ElementPosition {
         position.x += this.speed.x
         position.y += this.speed.y
         if (position.x >= window.screen.availWidth || position.x <= 0 || position.y >= window.screen.availHeight || position.y <= 0) {
-            
-            position.x = window.screen.availWidth / 2
-            position.y = window.screen.availHeight / 2
 
-            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 }
+            position.x = window.screen.availWidth / 2 + RandomNum(-100, 100)
+            position.y = window.screen.availHeight / 2 + RandomNum(-100, 100)
+
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) }
         }
 
         return position
@@ -165,7 +171,7 @@ export class Lighting implements IAnimation {
     element: HTMLElement;
     constructor(private shadow?: number, private speed?: number, private color?: string) {
         if (!shadow) this.shadow = RandomNum(50, 150)
-        if (!speed) this.speed = (RandomNum(1, 3) - 2)
+        if (!speed) this.speed = (RandomNum(-1, 1))
         if (!color) this.color = 'rgba(255,255,255,0.3)'
     }
     setElement(element: HTMLElement) {

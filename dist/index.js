@@ -1,7 +1,10 @@
 const lightMax = 200;
 const lightMin = 100;
-const RandomNum = (num1, num2) => {
+export const RandomNum = (num1, num2) => {
     return Math.floor(Math.random() * (num2 - num1 + 1) + num1);
+};
+export const RandomColor = () => {
+    return "rgba(" + RandomNum(0, 255) + "," + RandomNum(0, 255) + "," + RandomNum(0, 255) + "," + Math.random() + ")"; //随机颜色
 };
 export class Transformation {
     constructor(container) {
@@ -11,6 +14,11 @@ export class Transformation {
     }
     initCssText(cssText) {
         this.cssText = cssText;
+        return this;
+    }
+    setClass(c) {
+        this.element.className = c;
+        return this;
     }
     setAnimation(animation) {
         this.animations.push(animation.setElement(this.element));
@@ -31,7 +39,7 @@ export class RandomTrack {
     constructor(speed) {
         this.speed = speed;
         if (!speed)
-            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 };
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) };
     }
     calculation(position) {
         position.x += this.speed.x;
@@ -49,7 +57,7 @@ export class UpTrack {
     constructor(speed) {
         this.speed = speed;
         if (!speed)
-            this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) - 3 };
+            this.speed = { x: RandomNum(-0.1, 0.1), y: RandomNum(-3, 0) };
     }
     calculation(position) {
         position.x += this.speed.x;
@@ -59,6 +67,7 @@ export class UpTrack {
         }
         if (position.y <= 0) {
             position.y += window.screen.availHeight;
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) };
         }
         return position;
     }
@@ -67,11 +76,15 @@ export class DownTrack {
     constructor(speed) {
         this.speed = speed;
         if (!speed)
-            this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(1, 3) };
+            this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(2, 3) };
+    }
+    // 下降加速
+    gravity(x) {
+        return 1 + 0.5 * x / window.screen.availHeight;
     }
     calculation(position) {
         position.x += this.speed.x;
-        position.y += this.speed.y;
+        position.y += this.speed.y * this.gravity(position.y);
         if (position.x >= window.screen.availWidth || position.x <= 0) {
             this.speed.x = -this.speed.x; // 
         }
@@ -85,14 +98,15 @@ export class SpreadTrack {
     constructor(speed) {
         this.speed = speed;
         if (!speed)
-            this.speed = { x: RandomNum(1, 3) - 2, y: RandomNum(1, 3) - 2 };
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) };
     }
     calculation(position) {
         position.x += this.speed.x;
         position.y += this.speed.y;
         if (position.x >= window.screen.availWidth || position.x <= 0 || position.y >= window.screen.availHeight || position.y <= 0) {
-            position.x = window.screen.availWidth / 2;
-            position.y = window.screen.availHeight / 2;
+            position.x = window.screen.availWidth / 2 + RandomNum(-100, 100);
+            position.y = window.screen.availHeight / 2 + RandomNum(-100, 100);
+            this.speed = { x: RandomNum(-1, 1), y: RandomNum(-1, 1) };
         }
         return position;
     }
@@ -106,6 +120,7 @@ export class Moving {
     }
     setTrack(track) {
         this.track = track;
+        return this;
     }
     setElement(element) {
         this.element = element;
@@ -129,7 +144,7 @@ export class Lighting {
         if (!shadow)
             this.shadow = RandomNum(50, 150);
         if (!speed)
-            this.speed = (RandomNum(1, 3) - 2);
+            this.speed = (RandomNum(-1, 1));
         if (!color)
             this.color = 'rgba(255,255,255,0.3)';
     }

@@ -26,7 +26,7 @@ export declare class Transformation {
     cssText: string;
     constructor(container?: HTMLElement);
     initCssText(cssText: any): this;
-    setClass(c: string): this;
+    setClass(c: string): void;
     setAnimation(animation: IAnimation): this;
     appendChild(child: HTMLElement | string): this;
     draw(): void;
@@ -44,7 +44,6 @@ export declare class UpTrack implements ITrack {
 export declare class DownTrack implements ITrack {
     private speed?;
     constructor(speed?: PositionSpeed);
-    gravity(x: number): number;
     calculation(position: ElementPosition): ElementPosition;
 }
 export declare class SpreadTrack implements ITrack {
