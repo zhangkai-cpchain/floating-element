@@ -2,29 +2,23 @@
   <div class="hello">
     <ul>
       <li>
-        <a href="https://vuejs.org" target="_blank">
-          Core Docs
+        <a href="#ball"  target="_blank">
+          Ball
         </a>
       </li>
       <li>
-        <a href="https://forum.vuejs.org" target="_blank">
-          Forum
+        <a href="#snow" target="_blank">
+          Snow
         </a>
       </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank">
-          Community Chat
+       <li>
+        <a href="#light" target="_blank">
+          Light
         </a>
       </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank">
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a href="http://vuejs-templates.github.io/webpack/" target="_blank">
-          Docs for This Template
+       <li>
+        <a href="#text" target="_blank">
+          Text
         </a>
       </li>
     </ul>
@@ -44,6 +38,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hello {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 h1,
 h2 {
   font-weight: normal;
