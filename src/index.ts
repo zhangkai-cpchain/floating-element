@@ -27,6 +27,10 @@ interface PositionSpeed {
 
 const lightMax = 200
 const lightMin = 100
+
+const mousemove = []
+
+
 export const RandomNum = (num1: number, num2: number): number => {
     return Math.floor(Math.random() * (num2 - num1 + 1) + num1);
 }
@@ -102,7 +106,7 @@ export class UpTrack implements ITrack {
 
 export class DownTrack implements ITrack {
     constructor(private speed?: PositionSpeed) {
-        if (!speed) this.speed = { x: RandomNum(0.1, 0.3) - 0.2, y: RandomNum(2, 3) }
+        if (!speed) this.speed = { x: RandomNum(-0.1, 0.3) , y: RandomNum(2, 2.5) }
     }
 
     // 下降加速
@@ -110,9 +114,26 @@ export class DownTrack implements ITrack {
         return 1 + 0.5 * x / window.screen.availHeight
     }
 
+    // getMouse() {
+    //     var posX = 0, posY = 0;
+    //     var event = event || window.event;
+    //     if (event.pageX || event.pageY) {
+    //         posX = event.pageX;
+    //         posY = event.pageY;
+    //     } else if (event.clientX || event.clientY) {
+    //         posX = event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+    //         posY = event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+    //     }
+
+    //     return {posX,posY}
+    // }
+
+
+
     calculation(position: ElementPosition): ElementPosition {
         position.x += this.speed.x
-        position.y += this.speed.y * this.gravity(position.y)
+        position.y += this.speed.y * this.gravity(position.y) 
+
         if (position.x >= window.screen.availWidth || position.x <= 0) {
             this.speed.x = -this.speed.x;// 
         }
@@ -205,5 +226,52 @@ export class TextShining implements IAnimation {
             this.speed = -this.speed
         }
         this.element.style.color = `rgba(255,255,255,${this.light / 10})`
+    }
+}
+
+export class SizeChanging implements IAnimation {
+    element: HTMLElement;
+    constructor(private size?: number, private speed?: number) {
+        if (!size) this.size = 20
+        if (!speed) this.speed = RandomNum(0.05, 0.1);
+    }
+    setElement(element: HTMLElement) {
+        this.element = element
+        return this
+    }
+    draw() {
+        this.size += this.speed
+        if (this.size > 30 || this.size < 2) {
+            this.speed = 0
+        }
+        let cssText = `
+			 height:${this.size}px;
+             width:${this.size}px;
+		`
+        this.element.style.cssText += cssText
+    }
+}
+
+export class Rotating implements IAnimation {
+    element: HTMLElement;
+    constructor(private size?: number, private speed?: number) {
+        if (!size) this.size = 0
+        if (!speed) this.speed = RandomNum(-0.3, 0.5);
+    }
+    setElement(element: HTMLElement) {
+        this.element = element
+        return this
+    }
+    draw() {
+        this.size += this.speed
+
+        let cssText = `
+        transform:rotate(${this.size}deg); 
+        -ms-transform:rotate(${this.size}deg); 
+        -moz-transform:rotate(${this.size}deg); 
+        -webkit-transform:rotate(${this.size}deg); 
+        -webkit-transform:rotate(${this.size}deg);  
+		`
+        this.element.style.cssText += cssText
     }
 }

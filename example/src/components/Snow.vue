@@ -4,17 +4,19 @@
 
 <script>
 import {
-  Transformation, Moving, DownTrack
+  Transformation, Moving, DownTrack, SizeChanging, Rotating
 } from '../../../dist/index'
 export default {
   created () {
     var snows = []
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
       var snow = new Transformation()
         .setClass('snow')
         .setAnimation(new Moving().setTrack(new DownTrack()))
-      snows.push(snow)// 生成的小球对象放进数组
+        .setAnimation(new SizeChanging())
+        .setAnimation(new Rotating())
+      snows.push(snow)
     }
 
     function start () {
@@ -36,7 +38,5 @@ export default {
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 40px;
-  width: 40px;
 }
 </style>>

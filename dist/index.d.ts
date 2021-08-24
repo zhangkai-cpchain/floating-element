@@ -78,4 +78,20 @@ export declare class TextShining implements IAnimation {
     setElement(element: HTMLElement): this;
     draw(): void;
 }
+export declare class SizeChanging implements IAnimation {
+    private size?;
+    private speed?;
+    element: HTMLElement;
+    constructor(size?: number, speed?: number);
+    setElement(element: HTMLElement): this;
+    draw(): void;
+}
+export declare class Rotating implements IAnimation {
+    private size?;
+    private speed?;
+    element: HTMLElement;
+    constructor(size?: number, speed?: number);
+    setElement(element: HTMLElement): this;
+    draw(): void;
+}
 export {};
