@@ -5,7 +5,6 @@
 ## Build Setup
 
 ``` bash
-cd .\example\ 
 
 npm install
 
